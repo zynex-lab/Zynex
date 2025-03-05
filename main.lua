@@ -14,10 +14,15 @@ equipitem = function(v)
 end
 
 -- โหลด UI Library
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zynex-lab/Zynex/refs/heads/main/source.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/G1GX/Fetching/main/Master/Fisch.TH"))()
 local Window = Library.CreateLib("Fisch", "DarkTheme")
-local Tab = Window:NewTab("MAIN")
-local Section = Tab:NewSection("MAIN")
+local Tab = Window:NewTab("หลัก")
+local Section = Tab:NewSection("ฟังก์ชันหลัก")
+
+-- ตั้งค่าฟอนต์
+Window.Main.TextLabel.Font = Enum.Font.SourceSans
+Window.Main.TextLabel.Text = "GPT Fisch" -- ชื่อ UI
+Window.Main.TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 -- ปรับขนาด UI
 local isUIVisible = true
@@ -65,7 +70,7 @@ end
 resizeUI()
 
 -- AutoCast
-Section:NewToggle("AutoCast", "", function(v)
+Section:NewToggle("เปิดการตกปลาอัตโนมัติ", "เปิด/ปิด การตกปลาอัตโนมัติ", function(v)
     _G.AutoCast = v
     pcall(function()
         while _G.AutoCast do
@@ -78,7 +83,7 @@ Section:NewToggle("AutoCast", "", function(v)
 end)
 
 -- AutoShake
-Section:NewToggle("AutoShake", "", function(v)
+Section:NewToggle("เปิดการเขย่าอัตโนมัติ", "เปิด/ปิด การเขย่าอัตโนมัติ", function(v)
     _G.AutoShake = v
     pcall(function()
         while _G.AutoShake do
@@ -102,7 +107,7 @@ Section:NewToggle("AutoShake", "", function(v)
 end)
 
 -- AutoReel
-Section:NewToggle("AutoReel", "", function(v)
+Section:NewToggle("เปิดการดึงสายอัตโนมัติ", "เปิด/ปิด การดึงสายอัตโนมัติ", function(v)
     _G.AutoReel = v
     pcall(function()
         while _G.AutoReel do
@@ -120,7 +125,7 @@ Section:NewToggle("AutoReel", "", function(v)
 end)
 
 -- Freeze Character
-Section:NewToggle("Freeze Character", "", function(v)
+Section:NewToggle("หยุดการเคลื่อนไหวตัวละคร", "เปิด/ปิด การหยุดการเคลื่อนไหวตัวละคร", function(v)
     Char.HumanoidRootPart.Anchored = v
 end)
 
