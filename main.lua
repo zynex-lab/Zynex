@@ -1,49 +1,56 @@
-local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/zynex-lab/Zynex/refs/heads/main/main.lua"))()
+-- สร้าง UI ใน Roblox
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
-local Window = redzlib:MakeWindow({
-  Title = "Fisch Fishing",
-  SubTitle = "ตกปลาหลอดเต็ม",
-  SaveFolder = "Redz Config",
-  Theme = {
-    BackgroundColor = Color3.fromRGB(0, 0, 0), -- สีพื้นหลังดำ
-    TextColor = Color3.fromRGB(0, 255, 0), -- ข้อความสีเขียว
-    ButtonColor = Color3.fromRGB(0, 128, 0), -- ปุ่มสีเขียวเข้ม
-    ToggleColor = Color3.fromRGB(0, 128, 0), -- Toggle สีเขียวเข้ม
-    SliderColor = Color3.fromRGB(0, 128, 0), -- สไลเดอร์สีเขียวเข้ม
-  },
-  Font = Enum.Font.SourceSans -- เปลี่ยนเป็นฟอนต์ Anuphan หากรองรับ
-})
+local Frame = Instance.new("Frame")
+Frame.Parent = ScreenGui
+Frame.Size = UDim2.new(0, 400, 0, 100)
+Frame.Position = UDim2.new(0.5, -200, 0.5, -50)
+Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BorderSizePixel = 0
+Frame.AnchorPoint = Vector2.new(0.5, 0.5)
 
--- Tabs
-local Tab1 = Window:MakeTab({"ตกปลา", "Fishing"})
+local Title = Instance.new("TextLabel")
+Title.Parent = Frame
+Title.Size = UDim2.new(1, 0, 0.2, 0)
+Title.Text = "ตกปลาหลอดเต็ม"
+Title.TextColor3 = Color3.fromRGB(0, 255, 0) -- เขียว
+Title.TextSize = 24
+Title.TextAlign = Enum.TextXAlignment.Center
+Title.BackgroundTransparency = 1
 
--- Buttons
-Tab1:AddButton({
-  Name = "Print",
-  Description = "ทดสอบ",
-  Callback = function()
-    print("Hello World!")
-  end,
-  ButtonColor = Color3.fromRGB(0, 128, 0), -- สีปุ่มเขียวเข้ม
-})
+local ProgressBar = Instance.new("Frame")
+ProgressBar.Parent = Frame
+ProgressBar.Size = UDim2.new(0.8, 0, 0.2, 0)
+ProgressBar.Position = UDim2.new(0.1, 0, 0.5, -10)
+ProgressBar.BackgroundColor3 = Color3.fromRGB(0, 255, 0) -- เขียว
+ProgressBar.BorderSizePixel = 0
 
--- Toggle
-local Toggle1 = Tab1:AddToggle({
-  Name = "Speed",
-  Description = "ปรับความเร็ว",
-  Default = false,
-  ToggleColor = Color3.fromRGB(0, 128, 0), -- สี Toggle เขียวเข้ม
-})
+local ProgressBarFill = Instance.new("Frame")
+ProgressBarFill.Parent = ProgressBar
+ProgressBarFill.Size = UDim2.new(0, 0, 1, 0) -- เริ่มต้นความยาวเป็น 0
+ProgressBarFill.BackgroundColor3 = Color3.fromRGB(0, 128, 0) -- สีเขียวเข้ม
+ProgressBarFill.BorderSizePixel = 0
 
--- Slider
-Tab1:AddSlider({
-  Name = "Speed",
-  Min = 1,
-  Max = 100,
-  Increase = 1,
-  Default = 16,
-  Callback = function(Value)
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
-  end,
-  SliderColor = Color3.fromRGB(0, 128, 0), -- สีสไลเดอร์เขียวเข้ม
-})
+-- ฟังก์ชันในการเติมหลอด
+local function fillProgressBar()
+    for i = 0, 100, 1 do
+        wait(0.05) -- ตั้งเวลาให้หลอดเต็มช้าๆ
+        ProgressBarFill.Size = UDim2.new(i / 100, 0, 1, 0)
+    end
+end
+
+-- ปุ่มเริ่มตกปลา
+local StartButton = Instance.new("TextButton")
+StartButton.Parent = Frame
+StartButton.Size = UDim2.new(0.4, 0, 0.3, 0)
+StartButton.Position = UDim2.new(0.3, 0, 0.8, -15)
+StartButton.Text = "เริ่มตกปลา"
+StartButton.TextColor3 = Color3.fromRGB(0, 255, 0)
+StartButton.TextSize = 20
+StartButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+StartButton.BorderSizePixel = 0
+
+StartButton.MouseButton1Click:Connect(function()
+    fillProgressBar() -- เริ่มเติมหลอดเมื่อคลิก
+end)
