@@ -14,7 +14,7 @@ if LocalPlayer.Backpack:FindFirstChild(v) then
 end
 
 
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zynex-lab/Zynex/refs/heads/main/main.lua"))()
 local Window = Library.CreateLib("Fisch", "DarkTheme")
 local Tab = Window:NewTab("MAIN")
 local Section = Tab:NewSection("MAIN")
