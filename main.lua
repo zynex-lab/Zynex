@@ -1,66 +1,89 @@
--- ตั้งค่าธีมสี
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "FishingUI"
-screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+local Player = game:GetService("Players")
+local LocalPlayer = Player.LocalPlayer
+local Char = LocalPlayer.Character
+local Humanoid = Char.Humanoid
+local VirtualInputManager = game:GetService("VirtualInputManager")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GuiService = game:GetService("GuiService")
 
-local frame = Instance.new("Frame")
-frame.Parent = screenGui
-frame.Size = UDim2.new(0.4, 0, 0.2, 0)
-frame.Position = UDim2.new(0.3, 0, 0.4, 0)  -- อยู่กลางจอ
-frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)  -- สีดำ
-frame.Active = true  -- ให้สามารถลากได้
-
--- เพิ่มการลาก UI
-frame.Draggable = true
-frame.Selectable = true
-
--- ตั้งค่าฟอนต์เป็น NotoSans
-local title = Instance.new("TextLabel")
-title.Parent = frame
-title.Text = "ตกปลาหลอดเต็ม"
-title.Size = UDim2.new(1, 0, 0.2, 0)
-title.TextColor3 = Color3.fromRGB(0, 255, 0)  -- สีเขียว
-title.TextSize = 24
-title.BackgroundTransparency = 1
-title.Font = Enum.Font.SourceSans -- ปรับเป็นฟอนต์ที่ใกล้เคียง NotoSans เนื่องจาก Roblox ไม่รองรับฟอนต์นี้
-
--- ทำหลอดสำหรับการตกปลา
-local progressBarBackground = Instance.new("Frame")
-progressBarBackground.Parent = frame
-progressBarBackground.Size = UDim2.new(0.8, 0, 0.1, 0)
-progressBarBackground.Position = UDim2.new(0.1, 0, 0.4, 0)
-progressBarBackground.BackgroundColor3 = Color3.fromRGB(0, 0, 0)  -- สีดำ
-
-local progressBar = Instance.new("Frame")
-progressBar.Parent = progressBarBackground
-progressBar.Size = UDim2.new(0, 0, 1, 0)  -- เริ่มต้นที่ขนาด 0
-progressBar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)  -- สีขาว
-
--- เพิ่มปุ่มเปิด-ปิด UI
-local toggleButton = Instance.new("TextButton")
-toggleButton.Parent = screenGui
-toggleButton.Size = UDim2.new(0.1, 0, 0.1, 0)
-toggleButton.Position = UDim2.new(0.45, 0, 0.85, 0)
-toggleButton.Text = "เปิด/ปิด"
-toggleButton.TextColor3 = Color3.fromRGB(0, 255, 0)  -- สีเขียว
-toggleButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)  -- สีดำ
-toggleButton.Font = Enum.Font.SourceSans  -- ปรับเป็นฟอนต์ที่ใกล้เคียง NotoSans
-
--- ฟังก์ชันสำหรับการควบคุมการแสดงผลของ UI
-local isUIVisible = true
-
-toggleButton.MouseButton1Click:Connect(function()
-    isUIVisible = not isUIVisible
-    screenGui.Enabled = isUIVisible
-end)
-
--- ฟังก์ชันสำหรับการทำให้หลอดเต็ม
-local function fillProgressBar()
-    for i = 0, 100, 1 do
-        wait(0.05)  -- ช้าลงตามความต้องการ
-        progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
+equipitem = function(v)
+if LocalPlayer.Backpack:FindFirstChild(v) then
+    local a = LocalPlayer.Backpack:FindFirstChild(v)
+        Humanoid:EquipTool(a)
     end
 end
 
--- เรียกใช้ฟังก์ชัน fillProgressBar เมื่อ UI เปิดขึ้น
-fillProgressBar()
+
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("Fisch", "DarkTheme")
+local Tab = Window:NewTab("MAIN")
+local Section = Tab:NewSection("MAIN")
+
+-- AutoCast
+Section:NewToggle("AutoCast", "", function(v)
+_G.AutoCast = v
+     pcall(function()
+while _G.AutoCast do wait()
+    local Rod = Char:FindFirstChildOfClass("Tool")
+                task.wait(.1)
+                    Rod.events.cast:FireServer(100,1)
+        end
+    end)
+end)
+
+Section:NewToggle("AutoShake", "", function(v)
+    _G.AutoShake = v
+pcall(function()
+while _G.AutoShake do wait()
+              task.wait(0.01)
+                local PlayerGUI = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
+                local shakeUI = PlayerGUI:FindFirstChild("shakeui")
+                if shakeUI and shakeUI.Enabled then
+                    local safezone = shakeUI:FindFirstChild("safezone")
+                    if safezone then
+                        local button = safezone:FindFirstChild("button")
+                        if button and button:IsA("ImageButton") and button.Visible then
+                                GuiService.SelectedObject = button
+                                VirtualInputManager:SendKeyEvent(true, Enum.KeyCode.Return, false, game)
+                                VirtualInputManager:SendKeyEvent(false, Enum.KeyCode.Return, false, game)
+                    end
+                end
+            end
+        end
+    end)
+end)
+-- AutoReel
+Section:NewToggle("AutoReel", "", function(v)
+     _G.AutoReel = v
+pcall(function()
+    while _G.AutoReel do wait()
+            for i,v in pairs(LocalPlayer.PlayerGui:GetChildren()) do
+                if v:IsA "ScreenGui" and v.Name == "reel"then
+                    if v:FindFirstChild "bar" then
+                        wait(.15)
+                            ReplicatedStorage.events.reelfinished:FireServer(100,true)
+                    end
+                end
+            end
+        end
+    end)
+end)
+
+Section:NewToggle("Freeze Character", "", function(v)
+    Char.HumanoidRootPart.Anchored = v
+end)
+
+-- equipitem
+spawn(function()
+    while wait() do
+        if _G.AutoCast then
+            pcall(function()
+                for i,v in pairs(LocalPlayer.Backpack:GetChildren()) do
+                    if v:IsA ("Tool") and v.Name:lower():find("rod") then
+                    equipitem(v.Name)
+                    end
+                end
+            end)
+        end
+    end
+end)
