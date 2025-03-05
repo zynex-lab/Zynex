@@ -6,6 +6,7 @@ local VirtualInputManager = game:GetService("VirtualInputManager")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GuiService = game:GetService("GuiService")
 
+-- ฟังก์ชันสำหรับการสวมอุปกรณ์
 equipitem = function(v)
     if LocalPlayer.Backpack:FindFirstChild(v) then
         local a = LocalPlayer.Backpack:FindFirstChild(v)
@@ -19,15 +20,8 @@ local Window = Library.CreateLib("Fisch", "DarkTheme")
 local Tab = Window:NewTab("หลัก")
 local Section = Tab:NewSection("ฟังก์ชันหลัก")
 
--- ตั้งค่าฟอนต์
-Window.Main.TextLabel.Font = Enum.Font.SourceSans
-Window.Main.TextLabel.Text = "ตกปลาสำหรับ Fisch" -- ชื่อ UI
-Window.Main.TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-
--- ปรับขนาด UI
+-- ฟังก์ชันหลัก: ปุ่มเปิด/ปิด UI
 local isUIVisible = true
-
--- สร้างปุ่มเปิด/ปิด UI
 local ToggleButton = Instance.new("TextButton")
 ToggleButton.Parent = game.Players.LocalPlayer.PlayerGui:WaitForChild("ScreenGui")
 ToggleButton.Size = UDim2.new(0, 100, 0, 40)
@@ -43,9 +37,8 @@ ToggleButton.MouseButton1Click:Connect(function()
     Window.Enabled = isUIVisible
 end)
 
--- การย่อ UI
+-- ปรับขนาด UI
 local function resizeUI()
-    -- สร้างปุ่มย่อ/ขยาย
     local ResizeButton = Instance.new("TextButton")
     ResizeButton.Parent = Window.Main
     ResizeButton.Size = UDim2.new(0, 20, 0, 20)
@@ -69,7 +62,32 @@ end
 
 resizeUI()
 
--- AutoCast
+-- ฟังก์ชันทำให้ UI เคลื่อนที่ได้
+local dragging = false
+local dragInput, mousePos, framePos
+
+Window.Main.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        mousePos = input.Position
+        framePos = Window.Main.Position
+    end
+end)
+
+Window.Main.InputEnded:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = false
+    end
+end)
+
+Window.Main.InputChanged:Connect(function(input)
+    if dragging then
+        local delta = input.Position - mousePos
+        Window.Main.Position = UDim2.new(framePos.X.Scale, framePos.X.Offset + delta.X, framePos.Y.Scale, framePos.Y.Offset + delta.Y)
+    end
+end)
+
+-- ฟังก์ชันต่างๆ ใน UI
 Section:NewToggle("เปิดการตกปลาอัตโนมัติ", "เปิด/ปิด การตกปลาอัตโนมัติ", function(v)
     _G.AutoCast = v
     pcall(function()
@@ -82,7 +100,6 @@ Section:NewToggle("เปิดการตกปลาอัตโนมัต�
     end)
 end)
 
--- AutoShake
 Section:NewToggle("เปิดการเขย่าอัตโนมัติ", "เปิด/ปิด การเขย่าอัตโนมัติ", function(v)
     _G.AutoShake = v
     pcall(function()
@@ -106,7 +123,6 @@ Section:NewToggle("เปิดการเขย่าอัตโนมัต�
     end)
 end)
 
--- AutoReel
 Section:NewToggle("เปิดการดึงสายอัตโนมัติ", "เปิด/ปิด การดึงสายอัตโนมัติ", function(v)
     _G.AutoReel = v
     pcall(function()
@@ -124,12 +140,11 @@ Section:NewToggle("เปิดการดึงสายอัตโนมั�
     end)
 end)
 
--- Freeze Character
 Section:NewToggle("หยุดการเคลื่อนไหวตัวละคร", "เปิด/ปิด การหยุดการเคลื่อนไหวตัวละคร", function(v)
     Char.HumanoidRootPart.Anchored = v
 end)
 
--- equipitem
+-- ฟังก์ชันสำหรับการสวมอุปกรณ์
 spawn(function()
     while wait() do
         if _G.AutoCast then
