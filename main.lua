@@ -1,56 +1,58 @@
--- สร้าง UI ใน Roblox
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+-- ตั้งค่าธีมสี
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "FishingUI"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
-local Frame = Instance.new("Frame")
-Frame.Parent = ScreenGui
-Frame.Size = UDim2.new(0, 400, 0, 100)
-Frame.Position = UDim2.new(0.5, -200, 0.5, -50)
-Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-Frame.BorderSizePixel = 0
-Frame.AnchorPoint = Vector2.new(0.5, 0.5)
+local frame = Instance.new("Frame")
+frame.Parent = screenGui
+frame.Size = UDim2.new(0.4, 0, 0.2, 0)
+frame.Position = UDim2.new(0.3, 0, 0.8, 0)
+frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)  -- สีดำ
 
-local Title = Instance.new("TextLabel")
-Title.Parent = Frame
-Title.Size = UDim2.new(1, 0, 0.2, 0)
-Title.Text = "ตกปลาหลอดเต็ม"
-Title.TextColor3 = Color3.fromRGB(0, 255, 0) -- เขียว
-Title.TextSize = 24
-Title.TextAlign = Enum.TextXAlignment.Center
-Title.BackgroundTransparency = 1
+local title = Instance.new("TextLabel")
+title.Parent = frame
+title.Text = "ตกปลาหลอดเต็ม"
+title.Size = UDim2.new(1, 0, 0.2, 0)
+title.TextColor3 = Color3.fromRGB(0, 255, 0)  -- สีเขียว
+title.TextSize = 24
+title.BackgroundTransparency = 1
 
-local ProgressBar = Instance.new("Frame")
-ProgressBar.Parent = Frame
-ProgressBar.Size = UDim2.new(0.8, 0, 0.2, 0)
-ProgressBar.Position = UDim2.new(0.1, 0, 0.5, -10)
-ProgressBar.BackgroundColor3 = Color3.fromRGB(0, 255, 0) -- เขียว
-ProgressBar.BorderSizePixel = 0
+-- ทำหลอดสำหรับการตกปลา
+local progressBarBackground = Instance.new("Frame")
+progressBarBackground.Parent = frame
+progressBarBackground.Size = UDim2.new(0.8, 0, 0.1, 0)
+progressBarBackground.Position = UDim2.new(0.1, 0, 0.4, 0)
+progressBarBackground.BackgroundColor3 = Color3.fromRGB(0, 0, 0)  -- สีดำ
 
-local ProgressBarFill = Instance.new("Frame")
-ProgressBarFill.Parent = ProgressBar
-ProgressBarFill.Size = UDim2.new(0, 0, 1, 0) -- เริ่มต้นความยาวเป็น 0
-ProgressBarFill.BackgroundColor3 = Color3.fromRGB(0, 128, 0) -- สีเขียวเข้ม
-ProgressBarFill.BorderSizePixel = 0
+local progressBar = Instance.new("Frame")
+progressBar.Parent = progressBarBackground
+progressBar.Size = UDim2.new(0, 0, 1, 0)  -- เริ่มต้นที่ขนาด 0
+progressBar.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- สีเขียว
 
--- ฟังก์ชันในการเติมหลอด
+-- เพิ่มปุ่มเปิด-ปิด UI
+local toggleButton = Instance.new("TextButton")
+toggleButton.Parent = screenGui
+toggleButton.Size = UDim2.new(0.1, 0, 0.1, 0)
+toggleButton.Position = UDim2.new(0.45, 0, 0.9, 0)
+toggleButton.Text = "เปิด/ปิด"
+toggleButton.TextColor3 = Color3.fromRGB(0, 255, 0)  -- สีเขียว
+toggleButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)  -- สีดำ
+
+-- ฟังก์ชันสำหรับการควบคุมการแสดงผลของ UI
+local isUIVisible = true
+
+toggleButton.MouseButton1Click:Connect(function()
+    isUIVisible = not isUIVisible
+    screenGui.Enabled = isUIVisible
+end)
+
+-- ฟังก์ชันสำหรับการทำให้หลอดเต็ม
 local function fillProgressBar()
     for i = 0, 100, 1 do
-        wait(0.05) -- ตั้งเวลาให้หลอดเต็มช้าๆ
-        ProgressBarFill.Size = UDim2.new(i / 100, 0, 1, 0)
+        wait(0.05)  -- ช้าลงตามความต้องการ
+        progressBar.Size = UDim2.new(i / 100, 0, 1, 0)
     end
 end
 
--- ปุ่มเริ่มตกปลา
-local StartButton = Instance.new("TextButton")
-StartButton.Parent = Frame
-StartButton.Size = UDim2.new(0.4, 0, 0.3, 0)
-StartButton.Position = UDim2.new(0.3, 0, 0.8, -15)
-StartButton.Text = "เริ่มตกปลา"
-StartButton.TextColor3 = Color3.fromRGB(0, 255, 0)
-StartButton.TextSize = 20
-StartButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-StartButton.BorderSizePixel = 0
-
-StartButton.MouseButton1Click:Connect(function()
-    fillProgressBar() -- เริ่มเติมหลอดเมื่อคลิก
-end)
+-- เรียกใช้ฟังก์ชัน fillProgressBar เมื่อ UI เปิดขึ้น
+fillProgressBar()
