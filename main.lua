@@ -14,7 +14,7 @@ equipitem = function(v)
 end
 
 -- โหลด UI Library
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/G1GX/Fetching/main/Master/Fisch.TH"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zynex-lab/Zynex/refs/heads/main/main.lua"))()
 local Window = Library.CreateLib("Fisch", "DarkTheme")
 local Tab = Window:NewTab("หลัก")
 local Section = Tab:NewSection("ฟังก์ชันหลัก")
