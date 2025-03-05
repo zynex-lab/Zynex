@@ -14,14 +14,14 @@ equipitem = function(v)
 end
 
 -- โหลด UI Library
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zynex-lab/Zynex/refs/heads/main/main.lua"))()
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/zynex-lab/Zynex/refs/heads/main/source.lua"))()
 local Window = Library.CreateLib("Fisch", "DarkTheme")
 local Tab = Window:NewTab("หลัก")
 local Section = Tab:NewSection("ฟังก์ชันหลัก")
 
 -- ตั้งค่าฟอนต์
 Window.Main.TextLabel.Font = Enum.Font.SourceSans
-Window.Main.TextLabel.Text = "GPT Fisch" -- ชื่อ UI
+Window.Main.TextLabel.Text = "ตกปลาสำหรับ Fisch" -- ชื่อ UI
 Window.Main.TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 
 -- ปรับขนาด UI
